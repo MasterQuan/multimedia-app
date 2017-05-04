@@ -1,40 +1,26 @@
-package com.qqmaster.util;
+package com.qqmaster.service.impl;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JFrame;
-
+import org.bytedeco.javacpp.opencv_videoio;
 import org.bytedeco.javacpp.opencv_videoio.CvCapture;
-import org.bytedeco.javacv.CanvasFrame;
-import org.bytedeco.javacv.FFmpegFrameFilter;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
-import org.bytedeco.javacv.OpenCVFrameGrabber;
 
 import com.qqmaster.common.SystemConstant;
+import com.qqmaster.service.VideoService;
 
-import org.bytedeco.javacpp.avformat.AVFormatContext;
-import org.bytedeco.javacpp.opencv_videoio;
-/**
- * VideoUtils which contains the following functions:
- * 	1.get the CvCapture from a specified file name;
- * 	2.get the frame count of a specified CvCapture;
- * 	3.get the fps of a specified CvCapture;
- * 	4.get the duration of a specified CvCapture by given file name;
- * 
- * @author qqmaster 2017年5月2日 上午10:45:24
- *
- */
-public class VideoUtils {
+public class VideoServiceImpl implements VideoService{
 
 	/**
 	 * Get CvCapture from the specified file path.
 	 * @param file
 	 * @return
 	 */
-	public static CvCapture getCvCapture(String filePath){
+	@Override
+	public CvCapture getCvCapture(String filePath){
 
 		File file = new File(filePath);
 		if (!file.exists()) {
@@ -49,7 +35,8 @@ public class VideoUtils {
 	 * @param cvCapture
 	 * @return
 	 */
-	public static long getCvFrameCount(CvCapture cvCapture){
+	@Override
+	public long getCvFrameCount(CvCapture cvCapture){
 		return (long)opencv_videoio.cvGetCaptureProperty(cvCapture, opencv_videoio.CAP_PROP_FRAME_COUNT);
 	}
 
@@ -58,7 +45,8 @@ public class VideoUtils {
 	 * @param cvCapture
 	 * @return
 	 */
-	public static long getCvFPS(CvCapture cvCapture){
+	@Override
+	public long getCvFPS(CvCapture cvCapture){
 		return (long)opencv_videoio.cvGetCaptureProperty(cvCapture, opencv_videoio.CV_CAP_PROP_FPS);
 	}
 
@@ -68,7 +56,8 @@ public class VideoUtils {
 	 * @return
 	 * @throws Exception 
 	 */
-	public static double getVideoDuration(String filePath) throws Exception{
+	@Override
+	public double getVideoDuration(String filePath) throws Exception{
 		double duration = 0.0;
 		try(FFmpegFrameGrabber ffg = FFmpegFrameGrabber.createDefault(filePath);){
 			ffg.start();
@@ -85,11 +74,12 @@ public class VideoUtils {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<Frame> getFramesOfVideo(String filePath,List<Integer> randoms) throws Exception{
+	@Override
+	public List<Frame> getFramesOfVideo(String filePath,List<Integer> randoms) throws Exception{
 		List<Frame> frames = new ArrayList<Frame>();
 		FFmpegFrameGrabber ffg = FFmpegFrameGrabber.createDefault(filePath);
 		ffg.start();
-		
+
 		{
 			int numFrames = ffg.getLengthInFrames();
 			int i = 0;
@@ -104,9 +94,9 @@ public class VideoUtils {
 				}
 			}
 		}
-		
+
 		ffg.stop();
-		
+
 		return frames;
 	}
 
@@ -117,7 +107,8 @@ public class VideoUtils {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<Frame> getAllFramesOfVideo(String filePath) throws Exception{
+	@Override
+	public List<Frame> getAllFramesOfVideo(String filePath) throws Exception{
 		List<Frame> frames = new ArrayList<Frame>();
 		FFmpegFrameGrabber ffg = FFmpegFrameGrabber.createDefault(filePath);
 		ffg.start();
@@ -163,4 +154,5 @@ public class VideoUtils {
 		System.out.println("==>" +i);
 
 	}
+
 }

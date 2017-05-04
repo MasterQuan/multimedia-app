@@ -5,6 +5,12 @@ import javax.swing.JFrame;
 import org.bytedeco.javacv.CanvasFrame;
 import org.bytedeco.javacv.OpenCVFrameGrabber;
 
+/**
+ * 调用本机摄像头程序。
+ * 
+ * @author qqmaster 2017年5月2日 下午2:08:23
+ *
+ */
 public class CameraUtil {
 	
 	private static OpenCVFrameGrabber grabber;
