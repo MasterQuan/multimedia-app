@@ -16,6 +16,7 @@ import org.bytedeco.javacv.OpenCVFrameGrabber;
 import com.qqmaster.common.SystemConstant;
 
 import org.bytedeco.javacpp.avformat.AVFormatContext;
+import org.bytedeco.javacpp.opencv_core;
 import org.bytedeco.javacpp.opencv_videoio;
 /**
  * VideoUtils which contains the following functions:
@@ -85,7 +86,7 @@ public class VideoUtils {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<Frame> getFramesOfVideo(String filePath,List<Integer> randoms) throws Exception{
+	public static List<Frame> getFramesOfVideo(String filePath,List<Integer> locs) throws Exception{
 		List<Frame> frames = new ArrayList<Frame>();
 		FFmpegFrameGrabber ffg = FFmpegFrameGrabber.createDefault(filePath);
 		ffg.start();
@@ -93,10 +94,10 @@ public class VideoUtils {
 		{
 			int numFrames = ffg.getLengthInFrames();
 			int i = 0;
-			for(Integer random:randoms){
+			for(Integer loc:locs){
 				for(; i< numFrames; i++){
 					Frame frame = ffg.grabFrame();
-					if(i == random){
+					if(i == loc){
 						frames.add(frame);
 						i++;
 						break;
@@ -143,6 +144,9 @@ public class VideoUtils {
 
 
 	public static void main(String[] args) throws Exception {
+		
+//		opencv_core.IplImage
+		
 		List<Integer> randoms = new ArrayList<Integer>();
 		randoms.add(2);
 		randoms.add(4);

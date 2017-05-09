@@ -1,5 +1,7 @@
 package com.qqmaster.util;
 
-public class AudioUtils {
+import edu.cmu.sphinx.api.Configuration;
 
+public class AudioUtils {
+	 Configuration configuration = new Configuration();
 }

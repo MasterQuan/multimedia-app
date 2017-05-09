@@ -3,6 +3,8 @@ package com.qqmaster.util;
 import static org.bytedeco.javacpp.opencv_core.CV_32SC1;
 import static org.bytedeco.javacpp.opencv_imgcodecs.CV_LOAD_IMAGE_GRAYSCALE;
 import static org.bytedeco.javacpp.opencv_imgcodecs.imread;
+import static org.bytedeco.javacpp.opencv_imgproc.COLOR_BGRA2GRAY;
+import static org.bytedeco.javacpp.opencv_imgproc.cvtColor;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -24,7 +26,7 @@ import com.qqmaster.common.SystemConstant;
  * @author zhaoshiquan 2017年5月3日 上午10:56:05
  *
  */
-public class MultiMediaUtils {
+public class CommonUtils {
 
 	/**
 	 * 获取指定数目{@value length}和指定范围{@value baseNum}的随机数，并排序
@@ -139,32 +141,57 @@ public class MultiMediaUtils {
 	public static void trainFaceRecognizerWithFile(FaceRecognizer faceRecognizer, String trainFile){
 		faceRecognizer.load(trainFile);
 	}
-	
+
 	public static void saveTrainFile(FaceRecognizer faceRecognizer, String trainFile){
 		trainFaceRecognizerWithImages(faceRecognizer,trainFile);
-		faceRecognizer.save(SystemConstant.TRAIN_FILE);
+		faceRecognizer.save(SystemConstant.TRAIN_RESULT_FILE);
 	}
 
 
 	public static void detectFaceInImages(FaceRecognizer faceRecognizer, String testDir){
-		File[] images = MultiMediaUtils.getImageFiles(testDir);
+		File[] images = getImageFiles(testDir);
 		int index = 1;
 		for(File image:images){
 			Mat testImage = imread(image.getAbsolutePath(), CV_LOAD_IMAGE_GRAYSCALE);
 			int predictedLabel = faceRecognizer.predict_label(testImage);
-			System.out.println(index + " has face--> " + ((predictedLabel ==1) ? true : false));
+			System.out.println(image.getAbsolutePath() + " has face--> " + ((predictedLabel ==1) ? true : false));
 			index++;
 		}
 	}
 
-	public static void detectFaceInFrames(FaceRecognizer faceRecognizer, Frame[] frames){
+	public static boolean detectFaceInFrames(FaceRecognizer faceRecognizer, Frame[] frames){
 		OpenCVFrameConverter.ToMat converterToMat = new OpenCVFrameConverter.ToMat();
 
+		int count = 0;
+		int i = 0;
+		for(Frame frame : frames){
+			Mat testFrame = new Mat();
+			cvtColor(converterToMat.convert(frame), testFrame, COLOR_BGRA2GRAY);
+
+			int predictLable = faceRecognizer.predict_label(testFrame);
+			System.out.println(i+"th frame has face? --> " + (predictLable == 1 ? true:false));
+			count += (predictLable == 1 ? 1:0);
+			i++;
+		}
+		
+		return count > (frames.length>>1) ? true:false;
+	}
+
+	public static boolean detectFaceInFrames(FaceRecognizer faceRecognizer, Frame frame){
+		OpenCVFrameConverter.ToMat converterToMat = new OpenCVFrameConverter.ToMat();
+
+		Mat testFrame = new Mat();
+		cvtColor(converterToMat.convert(frame), testFrame, COLOR_BGRA2GRAY);
+
+		int predictLable = faceRecognizer.predict_label(testFrame);
+		boolean  result = (predictLable == 1 ? true:false);
+		System.out.println("the frame has face? --> " + (predictLable == 1 ? true:false));
+		return result;
 	}
 
 
 	public static void main(String[] args) {
-		
+
 	}
 
 }

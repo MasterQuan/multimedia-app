@@ -19,7 +19,8 @@ import org.bytedeco.javacpp.DoublePointer;
 import org.bytedeco.javacpp.opencv_face.FaceRecognizer;
 
 import com.qqmaster.common.SystemConstant;
-import com.qqmaster.util.MultiMediaUtils;
+import com.qqmaster.service.impl.FaceRecognizerServiceImpl;
+import com.qqmaster.util.CommonUtils;
 
 import org.bytedeco.javacpp.opencv_core.Mat;
 import org.bytedeco.javacpp.opencv_core.MatVector;
@@ -58,8 +59,7 @@ public class OpenCVFaceRecognizer {
 		
 //		MultiMediaUtils.trainFaceRecognizerWithImages(faceRecognizer, trainDir);
 //		faceRecognizer.save(SystemConstant.TRAIN_FILE);
-		MultiMediaUtils.trainFaceRecognizerWithFile(faceRecognizer, SystemConstant.TRAIN_FILE);
-		MultiMediaUtils.detectFaceInImages(faceRecognizer, testDir);
-		
+		CommonUtils.trainFaceRecognizerWithImages(faceRecognizer, trainDir);
+		CommonUtils.detectFaceInImages(faceRecognizer, testDir);
 	}
 }

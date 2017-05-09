@@ -15,7 +15,9 @@ public interface VideoService {
 	
 	public double getVideoDuration(String filePath) throws Exception;
 	
-	public List<Frame> getFramesOfVideo(String filePath,List<Integer> randoms) throws Exception;
+	public List<Frame> getRandomFramesOfVideo(String filePath) throws Exception;
+	
+	public List<Frame> getUniformFramesOfVideo(String filePath) throws Exception;
 	
 	public List<Frame> getAllFramesOfVideo(String filePath) throws Exception;
 }
